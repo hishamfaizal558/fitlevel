@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Dashboard</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('profile') }}">Profile</a>
+            <a href="{{ url_for('settings') }}">Settings</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Welcome, {{ user.name }}!</h2>
+            <p>Your last login was on {{ user.last_login }}.</p>
+        </section>          
+        <section>
+            <h2>Your Activities</h2>
+            <ul>
+                {% for activity in activities %}
+                    <li>{{ activity }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Your Company</p>
+    </footer>
+</body> 
+</html>
