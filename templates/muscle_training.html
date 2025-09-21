@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Muscle Training Videos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">Muscle Training Videos</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+            <h2 class="text-xl font-semibold mb-2">Push Ups</h2>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/_l3ySVKYVJ8" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div>
+            <h2 class="text-xl font-semibold mb-2">Squats</h2>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/aclHkVaku9U" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <!-- Add more videos as needed -->
+    </div>
+    <div class="mt-8 text-center">
+        <a href="{{ url_for('dashboard') }}" class="text-blue-500 hover:underline">Back to Dashboard</a>
+    </div>
+</body>
+</html>

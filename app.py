@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = "your_secret_key" 
@@ -25,8 +25,9 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
 
-        
         if email in users and users[email] == password:
+            session["user_id"] = email  # Set user_id in session
+            session["username"] = email.split("@")[0]  # Or fetch real name if using DB
             flash("Login successful!", "success")
             return redirect(url_for("dashboard"))  
         else:
@@ -52,9 +53,30 @@ def register():
 
     return render_template("register.html")
 
+
 @app.route("/dashboard")
 def dashboard():
-    return "<h1>Welcome to your Dashboard!</h1>"
+    if "user_id" in session:
+        return render_template("dashboard.html", username=session["username"])
+    else:
+        return redirect(url_for("login"))
+    
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+@app.route("/muscle-training")
+def muscle_training():
+    return render_template("muscle_training.html")
+
+@app.route("/levels")
+def levels():
+    return render_template("levels.html")
+
+@app.route("/weight-lifting")
+def weight_lifting():
+    return render_template("weight_lifting.html")
 
 if __name__ == "__main__":
     with app.app_context():

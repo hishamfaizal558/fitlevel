@@ -1,37 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">    
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Fitness Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h1>Dashboard</h1>
-        <nav>
-            <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('profile') }}">Profile</a>
-            <a href="{{ url_for('settings') }}">Settings</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-        </nav>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header OUTSIDE the flex container -->
+    <header class="w-full bg-gradient-to-r from-blue-900 via-blue-600 to-blue-400 py-6 shadow-lg flex items-center justify-center mb-8">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-wide drop-shadow-lg">
+            <span class="text-yellow-300">Fit</span><span class="text-white">Level</span>
+        </h1>
     </header>
-    <main>
-        <section>
-            <h2>Welcome, {{ user.name }}!</h2>
-            <p>Your last login was on {{ user.last_login }}.</p>
-        </section>          
-        <section>
-            <h2>Your Activities</h2>
-            <ul>
-                {% for activity in activities %}
-                    <li>{{ activity }}</li>
-                {% endfor %}
-            </ul>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2024 Your Company</p>
-    </footer>
-</body> 
+    <!-- Flex container for sidebar and main content -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white flex-shrink-0 min-h-screen shadow-xl">
+            <div class="p-6">
+                <!-- Logo / Title -->
+                <h2 class="text-3xl font-extrabold mb-10 tracking-wide">Dashboard</h2>
+
+                <!-- Navigation -->
+                <ul class="space-y-3">
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 hover:text-blue-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m-4-4h8"></path></svg>
+                            <span>Overview</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 hover:text-blue-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17v-6h6v6m-3-3h.01"></path></svg>
+                            <span>My Tasks</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 hover:text-blue-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"></path></svg>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 hover:text-blue-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21h6v-2H9v2zm0-4h6v-6H9v6zm0-8h6V5H9v4z"></path></svg>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 hover:text-blue-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21V8a4 4 0 10-8 0v13"></path></svg>
+                            <span>Customers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 hover:text-blue-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16h8M8 12h8M8 8h8"></path></svg>
+                            <span>Help</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 hover:text-blue-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('logout') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 hover:text-red-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5"></path></svg>
+                            <span>Log out</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <header class="flex justify-end items-center mb-8">
+                <div class="profile bg-white rounded-full px-4 py-2 shadow">
+                    <span class="font-semibold text-gray-700">{{ username }}</span>
+                </div>
+            </header>
+
+            <!-- Stats -->
+            <section class="stats grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card bg-white p-6 rounded-lg shadow text-center">
+                    <span class="text-lg font-semibold">Heart Rate</span>
+                    <div class="text-2xl font-bold text-blue-600 mt-2">85 BPM</div>
+                </div>
+                <div class="card bg-white p-6 rounded-lg shadow text-center">
+                    <span class="text-lg font-semibold">Energy Burn</span>
+                    <div class="text-2xl font-bold text-orange-500 mt-2">450 Kcal</div>
+                </div>
+                <div id="workout-card" class="card bg-white p-6 rounded-lg shadow text-center cursor-pointer">
+                    <span class="text-lg font-semibold">Workout</span>
+                    <div id="workout-timer" class="text-2xl font-bold text-green-500 mt-2">30:00</div>
+                </div>
+            </section>
+
+            <!-- Courses -->
+            <section class="courses mb-8">
+                <h3 class="text-xl font-bold mb-4">Featured Courses</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="course bg-blue-100 p-16 rounded shadow text-center font-semibold cursor-pointer" >
+                        <a href="{{ url_for('weight_lifting') }}" class="block w-full h-full">Weight Lifting</a> 
+                    </div>
+                    <div class="course bg-blue-100 p-16 rounded shadow text-center font-semibold cursor-pointer">
+                        <a href="{{ url_for('muscle_training') }}" class="block w-full h-full">Muscle Training</a>
+                    </div>
+                    <div class="course bg-blue-100 p-16 rounded shadow text-center font-semibold cursor-pointer">
+                        <a href="{{ url_for('levels') }}" class="block w-full h-full"></a>Levels
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services -->
+            <section class="services mb-8">
+                <h3 class="text-xl font-bold mb-4">Services</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="service bg-green-100 p-16 rounded shadow text-center font-semibold relative overflow-hidden"
+                        style="background-image: url('/static/images/exercise-bg.jpg'); background-size: cover; background-position: center;">
+                        <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+                        <span class="relative z-10 text-white">Exercise Program</span>
+                    </div>
+                    <div class="service bg-green-100 p-16 rounded shadow text-center font-semibold relative overflow-hidden"
+                        style="background-image: url('/static/images/protein.jpg'); background-size: cover; background-position: center;">
+                        <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+                        <span class="relative z-10 text-white">Nutrition Plans</span>
+                    </div>
+                    <div class="service bg-green-100 p-16 rounded shadow text-center font-semibold relative overflow-hidden"
+                        style="background-image: url('/static/images/practice.jpg'); background-size: cover; background-position: center;">
+                        <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+                        <span class="relative z-10 text-white">Practice Time</span>
+                    </div>
+                    <div class="service bg-green-100 p-16 rounded shadow text-center font-semibold relative overflow-hidden"
+                        style="background-image: url('/static/images/diet.jpg'); background-size: cover; background-position: center;">
+                        <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+                        <span class="relative z-10 text-white">Diet Program</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Today's Plan -->
+            <section class="today">
+                <h3 class="text-xl font-bold mb-4">Today’s Plan</h3>
+                <ul class="list-disc list-inside bg-white p-4 rounded shadow">
+                    <li>Push Ups - 100 reps</li>
+                    <li>Sit Ups - 50 reps</li>
+                    <li>Knee Push Ups - 20 reps</li>
+                    <li>Belly Fat Burner - 25 reps</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+    <script>
+        let timerInterval;
+        document.getElementById('workout-card').onclick = function() {
+            let timeLeft = 30 * 60; // 30 minutes in seconds
+            const timerDisplay = document.getElementById('workout-timer');
+            clearInterval(timerInterval); // Reset if already running
+
+            function updateTimer() {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                if (timeLeft > 0) {
+                    timeLeft--;
+                } else {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = "Time's up!";
+                }
+            }
+
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        };
+    </script>
+</body>
 </html>
