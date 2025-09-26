@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from PIL import Image, ImageChops
+import os
+import tensorflow as tf
+import numpy as np
+
 app = Flask(__name__)
 app.secret_key = "your_secret_key" 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -70,9 +75,35 @@ def logout():
 def muscle_training():
     return render_template("muscle_training.html")
 
-@app.route("/levels")
+# Load your trained model once
+level1_model = tf.keras.models.load_model('level1_model.h5')
+
+def predict_image(img_path):
+    img = Image.open(img_path).resize((128,128)).convert('RGB')
+    arr = np.array(img) / 255.0
+    arr = arr.reshape((1,128,128,3))
+    pred = level1_model.predict(arr)[0][0]
+    return pred
+
+@app.route("/levels", methods=["GET", "POST"])
 def levels():
-    return render_template("levels.html")
+    if "current_level" not in session:
+        session["current_level"] = 1
+
+    feedback = ""
+    if request.method == "POST" and session["current_level"] == 1:
+        uploaded_file = request.files.get("user_image")
+        if uploaded_file:
+            user_img_path = os.path.join("static", "user_upload.jpg")
+            uploaded_file.save(user_img_path)
+            pred = predict_image(user_img_path)
+            if pred > 0.5:  # Adjust threshold as needed
+                session["current_level"] = 2
+                feedback = "Matched! Level 2 unlocked."
+            else:
+                feedback = "Not matched. Try again."
+
+    return render_template("levels.html", current_level=session["current_level"], feedback=feedback)
 
 @app.route("/weight-lifting")
 def weight_lifting():

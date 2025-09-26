@@ -7,8 +7,20 @@
 </head>
 <body class="bg-gray-100 min-h-screen p-8">
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 class="text-3xl font-bold mb-6 text-center">Muscle Training Videos</h1>
+        <h1 class="text-3xl font-bold mb-6 text-center">Levels</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% if current_level == 1 %}
+            <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold mb-4">Level 1: Upload Your Image</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="file" name="user_image" accept="image/*" required class="mb-4">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Submit</button>
+                </form>
+                {% if feedback %}
+                    <div class="mt-4 text-lg font-bold text-green-600">{{ feedback }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
             {% for video in videos %}
             <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                 <h2 class="text-xl font-semibold mb-4">{{ video.title }}</h2>
