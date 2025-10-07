@@ -91,6 +91,8 @@ def levels():
         session["current_level"] = 1
 
     feedback = ""
+    level_passed = False
+
     if request.method == "POST" and session["current_level"] == 1:
         uploaded_file = request.files.get("user_image")
         if uploaded_file:
@@ -99,17 +101,74 @@ def levels():
             pred = predict_image(user_img_path)
             if pred > 0.5:  # Adjust threshold as needed
                 session["current_level"] = 2
-                feedback = "Matched! Level 2 unlocked."
+                feedback = "Matched! Level 1 passed."
+                level_passed = True
             else:
                 feedback = "Not matched. Try again."
 
-    return render_template("levels.html", current_level=session["current_level"], feedback=feedback)
+    # Handle "Next" button for Level 2
+    if request.method == "POST" and session["current_level"] == 2 and request.form.get("next_level"):
+        # You can add logic for Level 2 here
+        feedback = "Welcome to Level 2!"
+
+    return render_template("levels.html", current_level=session["current_level"], feedback=feedback, level_passed=level_passed)
+
+@app.route("/reset_level")
+def reset_level():
+    session["current_level"] = 1
+    return redirect(url_for("levels"))
 
 @app.route("/weight-lifting")
 def weight_lifting():
     return render_template("weight_lifting.html")
 
+@app.route("/exercise-program")
+def exercise_program():
+    return render_template("exercise_program.html")
+
+@app.route("/nutrition-plans")
+def nutrition_plans():
+    return render_template("nutrition_plans.html")
+
+@app.route("/practice-time")
+def practice_time():
+    return render_template("practice_time.html")
+
+@app.route("/diet-program", methods=["GET", "POST"])
+def diet_program():
+    result = None
+    if request.method == "POST":
+        weight = float(request.form.get("weight", 0))
+        height = float(request.form.get("height", 0))
+        protein = round(weight * 1.6, 1)
+        fiber = 30
+        carbs = round(weight * 4, 1)
+        result = {
+            "protein": protein,
+            "fiber": fiber,
+            "carbs": carbs
+        }
+    return render_template("diet.html", result=result)
+
+@app.route("/diet", methods=["GET", "POST"])
+def diet():
+    result = None
+    if request.method == "POST":
+        weight = float(request.form.get("weight", 0))
+        height = float(request.form.get("height", 0))
+        # Example calculations (adjust as needed)
+        protein = round(weight * 1.6, 1)  # grams per kg body weight
+        fiber = 30  # general daily recommendation in grams
+        carbs = round(weight * 4, 1)     # grams per kg body weight
+        result = {
+            "protein": protein,
+            "fiber": fiber,
+            "carbs": carbs
+        }
+    return render_template("diet.html", result=result)
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+# Remove Jinja template code from Python file.

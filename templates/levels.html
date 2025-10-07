@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Muscle Training Videos</title>
+    <title>Levels</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen p-8">
@@ -19,17 +19,38 @@
                 {% if feedback %}
                     <div class="mt-4 text-lg font-bold text-green-600">{{ feedback }}</div>
                 {% endif %}
+                {% if level_passed %}
+                <form method="POST">
+                    <button type="submit" name="next_level" value="2" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 mt-4">Next</button>
+                </form>
+                {% endif %}
+            </div>
+            {% elif current_level == 2 %}
+            <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold mb-4">Level 2</h2>
+                <p class="text-lg">Welcome to Level 2! (Add your next challenge here)</p>
+                {% if feedback %}
+                    <div class="mt-4 text-lg font-bold text-green-600">{{ feedback }}</div>
+                {% endif %}
             </div>
             {% endif %}
-            {% for video in videos %}
-            <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-                <h2 class="text-xl font-semibold mb-4">{{ video.title }}</h2>
-                <div class="aspect-w-16 aspect-h-9">
-                    <iframe class="w-full h-full rounded-lg" src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
-                </div>
-            </div>
-            {% endfor %}
         </div>
     </div>
+    <script>
+        if (request.method === "POST" && session["current_level"] === 1) {
+            const uploadedFile = request.files.get("user_image");
+            if (uploadedFile) {
+                const userImgPath = os.path.join("static", "user_upload.jpg");
+                uploadedFile.save(userImgPath);
+                const pred = predictImage(userImgPath);
+                if (pred > 0.5) { // Adjust threshold as needed
+                    session["current_level"] = 2;
+                    feedback = "Matched! Level 2 unlocked.";
+                } else {
+                    feedback = "Not matched. Try again.";
+                }
+            }
+        }
+    </script>
 </body>
 </html>
